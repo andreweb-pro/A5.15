@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <title>PWS A5 HW</title>
+
+
+  </head>
+  <body>
+
+    <div class="container">
+      <h1>Курочка ряба</h1>
+
+      <form id="messages">
+
+        <div class="form-group">
+          <label for="var1">var1</label>
+          <input type="text" class="form-control" name="var1" id="var1">
+        </div>
+        <div class="form-group">
+          <label for="var2">var2</label>
+          <input type="text" class="form-control" name="var2" id="var2">
+        </div>
+        <div class="form-group">
+          <label for="var3">var3</label>
+          <input type="text" class="form-control" name="var3" id="var3">
+        </div>
+        <div class="form-group">
+          <label for="var4">var4</label>
+          <input type="text" class="form-control" name="var4" id="var4">
+        </div>
+        <div class="form-group">
+          <label for="var5">var5</label>
+          <input type="text" class="form-control" name="var5" id="var5">
+        </div>
+        <div class="form-group">
+          <label for="var6">var6</label>
+          <input type="text" class="form-control" name="var6" id="var6">
+        </div>
+        <div class="form-group">
+          <label for="speach">speach</label>
+          <input type="text" class="form-control" name="speach" id="speach">
+        </div>
+
+      </form>
+
+      <div class="row">
+        <a id="button-fetch" class="btn btn-primary" style="margin-right: 10px">Создать текст</a>
+        <a id="button-repl" class="btn btn-primary">Заменить переменные</a>
+      </div>
+
+      <div class="row">
+        <div id="result"></div>
+      </div>
+
+    </div>
+
+
+    <script src="./js/jquery-3.4.1.min.js"></script>
+    <script src="./js/bootstrap.bundle.min.js"></script>
+    <script>
+        const dataURL = "https://api.jsonbin.io/b/5e905926172eb643896166e7";
+        let text = '';
+
+        function handleData(data, repl) {
+
+            // кажется, какой-то из этих способов сработает
+            //const var1 = $("input[name=var1]")[0].value()
+            //const var1 = $("input[name=var1]").value()
+            //const var1 = $("input[name=var1]")[0].default()
+
+            if (repl){
+                const var1 = $('#var1').val();
+                const var2 = $('#var2').val();
+                const var3 = $('#var3').val();
+                const var4 = $('#var4').val();
+                const var5 = $('#var5').val();
+                const var6 = $('#var6').val();
+                const speach = $('#speach').val();
+
+                response = data.text;
+                text = response.toString();
+                text = text.split('{var1}').join(var1);
+                text = text.split('{var2}').join(var2);
+                text = text.split('{var3}').join(var3);
+                text = text.split('{var4}').join(var4);
+                text = text.split('{var5}').join(var5);
+                text = text.split('{var6}').join(var6);
+                text = text.split('{speach}').join(speach);
+            } else {
+                text = data.text;
+            }
+            $("#result").html(text);
+        }
+
+        $("#button-fetch").click(function () {
+            $.getJSON(
+                dataURL,
+                function (data) {
+                    handleData(data, false);
+                }
+            )
+        });
+        $("#button-repl").click(function () {
+            $.getJSON(
+                dataURL,
+                function (data) {
+                    handleData(data, true);
+                }
+            )
+        });
+
+    </script>
+  </body>
+</html>
